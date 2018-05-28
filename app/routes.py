@@ -12,3 +12,8 @@ def home():
 #         git_info = json.dumps(request.json)
 #         print git_info
 #         return json.dumps(request.json)
+
+@app.errorhandler(404)
+def page_not_found(error):
+    """Return a custom 404 error."""
+    return 'This does not work Alex', 404
