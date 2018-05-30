@@ -1,43 +1,40 @@
-# from app import app
-# app.run(debug=True)
-from flask import Flask, jsonify, request, render_template
+import os
+# Using Flask since Python doesn't have built-in session management
+from flask import Flask, session, render_template
+# Our target library
+import requests
+import json
 
 app = Flask(__name__)
 
-#POST - used to receive data
-#GET - used to send data back only
+# Generate a secret random key for the session
+app.secret_key = os.urandom(24)
+
+# Define routes for the examples to actually run
+@app.route('/run_get')
+def run_get():
+	url = 'https://api.github.com/users/runnable'
+
+	# this issues a GET to the url. replace "get" with "post", "head",
+	# "put", "patch"... to make a request using a different method
+	r = requests.get(url)
+
+	return json.dumps(r.json(), indent=4)
+
+@app.route('/run_post')
+def run_post():
+	url = 'http://httpbin.org/post'
+	data = {'a': 10, 'b': [{'c': True, 'd': False}, None]}
+	headers = {'Content-Type': 'application/json'}
+
+	r = requests.post(url, data=json.dumps(data), headers=headers)
+
+	return json.dumps(r.json(), indent=4)
+
+# Define a route for the webserver
 @app.route('/')
-def home():
-    return render_template('home.html')
-    
-@app.route('/store/<string:name>')
-def get_store(name):
-    #Iterate over stores
-    #if the store name matches, return it
-    #if none match, return an error message
-    if store['name'] == name:
-        return jsonify(store)
-return jsonify({'message': 'store not found'})
+def index():
+	return render_template('home.html')
 
-@app.route('/store') #route only does GET, so need to tell it post
-def get_store():
-    return jsonify({'store': stores}) #make into dictionary
-
-@app.route('/store', methods='POST')
-def create_store():
-        request_data = request.get_json() #converts json string to python dictionary
-        new_store = {
-            'name': request_data['name'],
-            'items': []
-        }
-        stores.append(new_store)
-    return jsonify(new_store)
-
-@app.route('/store/<string:name>/item')
-def get_items_in_store(name):
-    for store in stores:
-        if store['name'] == name:
-            return jsonify({'items': store['items']})
-    return jsonify({'message': 'store not found'})
-
-app.run(debug=True)
+if __name__ == '__main__':
+	app.run(debug=True)
