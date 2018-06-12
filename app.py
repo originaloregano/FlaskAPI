@@ -23,7 +23,10 @@ print(r.json())
 #
 # >>> r = requests.post("http://httpbin.org/post", data=payload)
 # >>> print(r.text)
+>>> url = 'https://api.github.com/some/endpoint'
+>>> payload = {'some': 'data'}
 
+>>> r = requests.post(url, json=payload)
 # >>> r = requests.put('http://httpbin.org/put', data = {'key':'value'})
 # >>> r = requests.delete('http://httpbin.org/delete')
 # >>> r = requests.head('http://httpbin.org/get')
@@ -31,6 +34,7 @@ print(r.json())
 @app.route('/')
 def index():
     return "Hello Worlds"
+
 
 if __name__ == "__main__":
     app.run(debug=True)
