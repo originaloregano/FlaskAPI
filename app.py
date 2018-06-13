@@ -1,40 +1,43 @@
-from flask import Flask, jsonify
-from flask import make_response
+from flask import Flask, jsonify, request
 import requests
 
 app = Flask(__name__)
+api = "https://api.github.com"
 
-url = 'https://api.github.com/users/'
-headers = {'key1': 'value1', 'key2': 'value2'}
-r = requests.get(url, headers=headers)
+@app.route('/api', methods=['GET'])
+def getApi():
+  r = requests.get(api)
+  api_json = r.json()
+  return jsonify(api_json)
 
+@app.route('/api/<username>', methods=['GET'])
+def getUser(username):
+  user_endpoint = api+"/users/"+username
+  user_requests = requests.get(user_endpoint)
+  user_data = user_requests.json()
+  return jsonify(user_data)
 
-# payload = {'key1': 'value1', 'key2': 'value2'}
-# r = requests.get('https://api.github.com/events')
+@app.route('/api/<username>/<section>', methods=['GET'])
+def getUser(section):
+  user_endpoint = api+"/users/"
+  user_requests = r.get(user_endpoint)
+  user_data = user_requests.json()
+  return jsonify(user_data)
 
-print(r.status_code)
-print(r.url)
-r.headers['content-type']
+  
+@app.route('/api/<username>', methods=['GET'])
+def getUser(username):
+  user_endpoint = api+"/users/"+username
+  user_request = requests.get(user_endpoint)
+  user_data = user_request.json()
+  return jsonify(user_data)
 
-print(r.json())
-
-# >>> r = requests.post('http://httpbin.org/post', data = {'key':'value'})
-# >>> payload = {'key1': 'value1', 'key2': 'value2'}
-#
-# >>> r = requests.post("http://httpbin.org/post", data=payload)
-# >>> print(r.text)
-# >>> url = 'https://api.github.com/some/endpoint'
-# >>> payload = {'some': 'data'}
-#
-# >>> r = requests.post(url, json=payload)
-# >>> r = requests.put('http://httpbin.org/put', data = {'key':'value'})
-# >>> r = requests.delete('http://httpbin.org/delete')
-# >>> r = requests.head('http://httpbin.org/get')
-# >>> r = requests.options('http://httpbin.org/get')
-@app.route('/')
-def index():
-    return "Hello Worlds"
-
+@app.route('/api/<username>/<section>', methods=['GET'])
+def getUser(section):
+  user_endpoint = api+"/users/{}/{}".format(username,section)
+  user_request = user_request.get(user_endpoint)
+  user_data = user_request.json()
+  return jsonify(user_data)
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run(debug=True, port=5000)
