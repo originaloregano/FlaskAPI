@@ -35,13 +35,11 @@ def displayPretty(user_data):
         variable += "{}: {}".format(key, user_data[key]) + "<br>"
     return variable
 
-@app.route("/everything/<param>")
+@app.route("/data/<param>")
 def retrieveAndDisplay(param):
     user_data = getUser(param)
     display_data = guts(user_data)
     return displayKeys(display_data)
-
-
 
 # in order to get more data such as repos from github, need authentication
 # @app.route('/api/<username>/<section>', methods=['GET'])
